@@ -11,13 +11,18 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '\\', ':Neotree reveal<CR>', desc = 'NeoTree reveal', silent = true },
+    { '\\<Tab>', ':Neotree reveal<CR>', desc = 'Reveal current file in NeoTree', silent = true },
   },
   opts = {
     filesystem = {
+      filtered_items = {
+        visible = true,
+        hide_dotfiles = false,
+        hide_gitignored = false,
+      },
       window = {
         mappings = {
-          ['\\'] = 'close_window',
+          ['\\<Tab>'] = 'close_window', -- Close the NeoTree window with \ and Tab
         },
       },
     },
