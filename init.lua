@@ -124,6 +124,8 @@ vim.opt.rtp:prepend(lazypath)
 -- [[ Configure and install plugins ]]
 
 require('lazy').setup({
+  'natecraddock/workspaces.nvim', -- Workspaces
+
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- See `:help gitsigns` to understand what the configuration keys do
@@ -257,6 +259,22 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+
+      vim.keymap.set('n', '<leader>ww', function()
+        require('telescope').extensions.workspaces.workspaces()
+      end, { desc = '[W]orkspaces [W]orkspaces' })
+      vim.keymap.set('n', '<leader>wa', function()
+        require('workspaces').add()
+      end, { desc = '[W]orkspaces [A]dd' })
+      vim.keymap.set('n', '<leader>wr', function()
+        require('workspaces').remove()
+      end, { desc = '[W]orkspaces [R]emove' })
+      vim.keymap.set('n', '<leader>wo', function()
+        require('workspaces').open()
+      end, { desc = '[W]orkspaces [O]pen' })
+      vim.keymap.set('n', '<leader>ws', function()
+        require('workspaces').save()
+      end, { desc = '[W]orkspaces [S]ave' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
