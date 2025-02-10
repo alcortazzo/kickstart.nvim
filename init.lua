@@ -126,6 +126,18 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   'natecraddock/workspaces.nvim', -- Workspaces
 
+  { -- GitHub Copilot
+    'github/copilot.vim',
+    lazy = false,
+    config = function()
+      vim.g.copilot_no_tab_map = true -- Disable tab mapping
+      vim.g.copilot_assume_mapped = true -- Assume that the mapping is already done
+
+      -- Use <C-J> to accept Copilot suggestion
+      vim.api.nvim_set_keymap('i', '<C-J>', 'copilot#Accept("<CR>")', { silent = true, expr = true })
+    end,
+  },
+
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- See `:help gitsigns` to understand what the configuration keys do
