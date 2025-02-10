@@ -435,7 +435,18 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = { -- Documentation: https://www.andersevenrud.net/neovim.github.io/lsp/configurations/pyright/
+          settings = {
+            python = {
+              disableOrganizeImports = true, -- Disable because we use ruff
+              analysis = {
+                diagnosticMode = 'workspace', -- 'openFilesOnly' is default
+                logLevel = 'Trace', -- "Information" is default
+                typeCheckingMode = 'basic', -- 'basic' is default
+              },
+            },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -444,7 +455,6 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
-        --
 
         lua_ls = {
           -- cmd = { ... },
@@ -478,6 +488,9 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'ruff',
+        'prettier',
+        'shfmt',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -529,12 +542,40 @@ require('lazy').setup({
         }
       end,
       formatters_by_ft = {
-        lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
+        -- WARN: Do not forget to specify tools in ensure_installed
+
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
+
+        lua = { 'stylua' },
+        python = { 'ruff', 'ruff_format' }, -- example: { "isort", "black" }
+        css = { 'prettier' },
+        graphql = { 'prettier' },
+        html = { 'prettier' },
+        javascript = { 'prettier' },
+        javascriptreact = { 'prettier' },
+        json = { 'prettier' },
+        less = { 'prettier' },
+        markdown = { 'prettier' },
+        scss = { 'prettier' },
+        typescript = { 'prettier' },
+        typescriptreact = { 'prettier' },
+        yaml = { 'prettier' },
+        sh = { 'shfmt' },
+      },
+      formatters = {
+        ruff = {
+          append_args = { '--extend-select', 'I' },
+        },
+        ruff_format = {
+          append_args = { '--line-length', '120' },
+        },
+        prettier = {
+          append_args = { '--print-width', '120' },
+        },
+        shfmt = {
+          append_args = { '-i', '4' },
+        },
       },
     },
   },
