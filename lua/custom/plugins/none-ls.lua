@@ -7,18 +7,18 @@ return {
   },
   config = function()
     local null_ls = require 'null-ls'
-    local formatting = null_ls.builtins.formatting   -- to setup formatters
+    local formatting = null_ls.builtins.formatting -- to setup formatters
     local diagnostics = null_ls.builtins.diagnostics -- to setup linters
 
     -- list of formatters & linters for mason to install
     require('mason-null-ls').setup {
       ensure_installed = {
-        'prettier',  -- general formatter
+        'prettier', -- general formatter
         'checkmake', -- makefile linter
-        'stylua',    -- lua formatter
-        'eslint_d',  -- ts/js linter
-        'shfmt',     -- shell script formatter
-        'ruff',      -- python linter
+        -- 'stylua',    -- lua formatter
+        'eslint_d', -- ts/js linter
+        'shfmt', -- shell script formatter
+        'ruff', -- python linter
       },
       -- auto-install configured formatters & linters (with null-ls)
       automatic_installation = true,
@@ -40,16 +40,16 @@ return {
           'typescriptreact',
           'yaml',
         },
-        extra_args = { '--print-width', '120' },                                           -- set print width for prettier
+        extra_args = { '--print-width', '120' }, -- set print width for prettier
       },
-      diagnostics.checkmake,                                                               -- makefile linter
-      formatting.stylua,                                                                   -- lua formatter
-      formatting.shfmt.with { args = { '-i', '4' } },                                      -- shell script formatter with indentation set to 4 spaces
-      formatting.terraform_fmt,                                                            -- terraform formatter
+      diagnostics.checkmake, -- makefile linter
+      formatting.stylua, -- lua formatter
+      formatting.shfmt.with { args = { '-i', '4' } }, -- shell script formatter with indentation set to 4 spaces
+      formatting.terraform_fmt, -- terraform formatter
 
-      require('none-ls.formatting.ruff').with { extra_args = { '--extend-select', 'I' } }, -- python linter with extra args
+      require('none-ls.formatting.ruff').with { extra_args = { '--extend-select', 'I' } }, -- python linter with extra arga; I for isort
       require('none-ls.formatting.ruff_format').with {
-        extra_args = { '--line-length', '120' },                                           -- set line length for ruff formatter
+        extra_args = { '--line-length', '120' }, -- set line length for ruff formatter
       },
     }
 

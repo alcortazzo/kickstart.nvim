@@ -84,21 +84,12 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
---
--- NOTE: This won't work in all terminal emulators/tmux/etc. Try your own mapping
--- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
 -- Tab to increase indentation in visual mode
 vim.keymap.set('v', '<Tab>', '>gv', { noremap = true, silent = true })
 -- Shift+Tab to decrease indentation in visual mode
 vim.keymap.set('v', '<S-Tab>', '<gv', { noremap = true, silent = true })
-
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -147,44 +138,33 @@ vim.opt.rtp:prepend(lazypath)
 --
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
-  {
+  { -- GitHub Copilot
     'github/copilot.vim',
     lazy = false,
     config = function()
-      vim.g.copilot_no_tab_map = true -- Disable tab mapping
+      vim.g.copilot_no_tab_map = true    -- Disable tab mapping
       vim.g.copilot_assume_mapped = true -- Assume that the mapping is already done
 
       -- Use <C-J> to accept Copilot suggestion
       vim.api.nvim_set_keymap('i', '<C-J>', 'copilot#Accept("<CR>")', { silent = true, expr = true })
     end,
   },
-  {
+
+  { -- Workspaces
     'natecraddock/workspaces.nvim',
     config = function()
       require('workspaces').setup {
-        mappings = true,
-        disable_default_keybindings = false,
-        save_on_change = true,
-        auto_reload = true,
-        auto_reload_dir = vim.fn.stdpath 'config',
+        -- mappings = true,
+        -- disable_default_keybindings = false,
+        -- save_on_change = true,
+        -- auto_reload = true,
+        -- auto_reload_dir = vim.fn.stdpath 'config',
       }
     end,
   },
 
-  -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
-  -- NOTE: Plugins can also be added by using a table,
-  -- with the first argument being the link and the following
-  -- keys can be used to configure plugin behavior/loading/etc.
-  --
-  -- Use `opts = {}` to force a plugin to be loaded.
-  --
-
-  -- Here is a more advanced example where we pass configuration
-  -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
-  --    require('gitsigns').setup({ ... })
-  --
   -- See `:help gitsigns` to understand what the configuration keys do
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -199,22 +179,7 @@ require('lazy').setup({
     },
   },
 
-  --
-  -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
-  --
-  -- This is often very useful to both group configuration, as well as handle
-  -- lazy loading plugins that don't need to be loaded immediately at startup.
-  --
-  -- For example, in the following configuration, we use:
-  --  event = 'VimEnter'
-  --
-  -- which loads which-key before all the UI elements are loaded. Events can be
-  -- normal autocommands events (`:help autocmd-events`).
-  --
-  -- Then, because we use the `opts` key (recommended), the configuration runs
-  -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
-
-  { -- Useful plugin to show you pending keybinds.
+  {                     -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     opts = {
@@ -260,7 +225,7 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
+        { '<leader>c', group = '[C]ode',     mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
@@ -270,13 +235,6 @@ require('lazy').setup({
       },
     },
   },
-
-  -- NOTE: Plugins can specify dependencies.
-  --
-  -- The dependencies are proper plugin specifications as well - anything
-  -- you do for a plugin at the top level, you can do for a dependency.
-  --
-  -- Use the `dependencies` key to specify the dependencies of a particular plugin
 
   { -- Fuzzy Finder (files, lsp, etc)
     'nvim-telescope/telescope.nvim',
@@ -300,7 +258,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -425,7 +383,7 @@ require('lazy').setup({
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Allows extra capabilities provided by nvim-cmp
       'hrsh7th/cmp-nvim-lsp',
@@ -580,7 +538,19 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {
+          -- Documentation: https://www.andersevenrud.net/neovim.github.io/lsp/configurations/pyright/
+          settings = {
+            python = {
+              disableOrganizeImports = true,  -- Disable because we use Ruff
+              analysis = {
+                diagnosticMode = 'workspace', -- 'openFilesOnly' is default
+                logLevel = 'Trace',           -- 'Information' is default
+                typeCheckingMode = 'basic',   -- 'basic' is default
+              },
+            },
+          },
+        },
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -590,28 +560,51 @@ require('lazy').setup({
         -- But for many setups, the LSP (`ts_ls`) will work just fine
         -- ts_ls = {},
 
-        pylsp = {
-          settings = {
-            pylsp = {
-              plugins = {
-                -- formatter options
-                black = { enabled = false },
-                pylsp_black = { enabled = false },
-                autopep8 = { enabled = false },
-                yapf = { enabled = false },
-                -- linter options
-                pylint = { enabled = false }, --, executable = "pylint" },
-                pyflakes = { enabled = false },
-                pycodestyle = { enabled = false },
-                -- type checker
-                pylsp_mypy = { enabled = true },
+        -- pylsp = {
+        --   settings = {
+        --     pylsp = {
+        --       plugins = {
+        --         pyflakes = { enabled = false },
+        --         pycodestyle = { enabled = false },
+        --         autopep8 = { enabled = false },
+        --         yapf = { enabled = false },
+        --         mccabe = { enabled = false },
+        --         pylsp_mypy = { enabled = true },
+        --         pylsp_black = { enabled = false },
+        --         pylsp_isort = { enabled = false },
+        --       },
+        --     },
+        --   },
+        -- },
 
-                mccabe = { enabled = false },
-                pylsp_isort = { enabled = false },
-              },
-            },
-          },
-        },
+        -- pylsp = {
+        --   settings = {
+        --     pylsp = {
+        --       plugins = {
+        --         -- formatter options
+        --         black = { enabled = false },
+        --         pylsp_black = { enabled = false },
+        --         autopep8 = { enabled = false },
+        --         yapf = { enabled = false },
+        --         -- linting options
+        --         pylint = { enabled = false },
+        --         pyflakes = { enabled = false },
+        --         pycodestyle = { enabled = false },
+        --         -- type checking options
+        --         -- pylsp_mypy = { enabled = true },
+        --         -- pylsp_mypy = { enabled = true, live_mode = false, dmypy = true },
+        --         -- pylsp_mypy = { enabled = true, report_progress = true },
+        --
+        --         -- autocompeletion options
+        --         -- jedi_completion = { enabled = false },
+        --
+        --         mccabe = { enabled = false },
+        --         -- mypy = { enabled = true },
+        --         pylsp_isort = { enabled = false },
+        --       },
+        --     },
+        --   },
+        -- },
 
         lua_ls = {
           -- cmd = { ... },
@@ -645,6 +638,7 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        -- 'pylsp',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
